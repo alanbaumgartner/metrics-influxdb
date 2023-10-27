@@ -123,7 +123,7 @@ impl InfluxConfig for InfluxV2Config {
 }
 
 mod test {
-    
+    use crate::config::*;
 
     #[test]
     fn test_v1_config() {

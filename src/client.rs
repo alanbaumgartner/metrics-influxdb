@@ -4,7 +4,7 @@ use std::time::Duration;
 use itertools::Itertools;
 use metrics::{Counter, Gauge, Histogram, Key, KeyName, Recorder, SharedString, Unit};
 use metrics_util::parse_quantiles;
-use metrics_util::registry::{Registry};
+use metrics_util::registry::Registry;
 use reqwest::{Client, RequestBuilder};
 use serde::{Deserialize, Serialize};
 use tokio::time::sleep;
@@ -15,8 +15,9 @@ use crate::error::{InfluxError, Result};
 use crate::metric::Metric;
 use crate::registry::AtomicStorage;
 
+#[derive(Clone)]
 pub struct InfluxClient {
-    recorder: Arc<InfluxRecorder>,
+    recorder: InfluxRecorder,
 }
 
 impl InfluxClient {
@@ -24,8 +25,12 @@ impl InfluxClient {
         let client = Client::new();
         let request = config.request(&client);
         InfluxClient {
-            recorder: Arc::new(InfluxRecorder::new(client, request)),
+            recorder: InfluxRecorder::new(client, request),
         }
+    }
+
+    pub fn recorder(&self) -> InfluxRecorder {
+        self.recorder.clone()
     }
 
     pub fn start(&self, delay: Duration) {
@@ -35,19 +40,22 @@ impl InfluxClient {
                 sleep(delay).await;
 
                 let counter_gauges = recorder
+                    .inner
                     .registry
                     .get_counter_handles()
                     .iter()
-                    .chain(recorder.registry.get_gauge_handles().iter())
+                    .chain(recorder.inner.registry.get_gauge_handles().iter())
                     .map(|metric| metric.into())
                     .collect::<Vec<Metric>>();
 
                 let histograms = recorder
+                    .inner
                     .registry
                     .get_histogram_handles()
                     .iter()
                     .map(|(key, value)| {
-                        let mut distribution = recorder.distribution_builder.get_distribution();
+                        let mut distribution =
+                            recorder.inner.distribution_builder.get_distribution();
                         value.clear_with(|samples| distribution.record_samples(samples));
                         (key, distribution)
                     })
@@ -69,7 +77,12 @@ impl InfluxClient {
     }
 }
 
+#[derive(Clone)]
 pub struct InfluxRecorder {
+    inner: Arc<Inner>,
+}
+
+pub struct Inner {
     client: Client,
     request: RequestBuilder,
     registry: Registry<Key, AtomicStorage>,
@@ -79,16 +92,20 @@ pub struct InfluxRecorder {
 impl InfluxRecorder {
     pub fn new(client: Client, request: RequestBuilder) -> InfluxRecorder {
         let quantiles = parse_quantiles(&[0.0, 0.5, 0.9, 0.95, 0.99, 0.999, 1.0]);
-        InfluxRecorder {
+        let inner = Inner {
             client,
             request,
             registry: Registry::new(AtomicStorage),
             distribution_builder: DistributionBuilder::new(quantiles, None),
+        };
+        InfluxRecorder {
+            inner: Arc::new(inner),
         }
     }
 
     async fn write_metrics(&self, metrics: String) -> Result<()> {
         let response = self
+            .inner
             .request
             .try_clone()
             .unwrap()
@@ -131,17 +148,20 @@ impl Recorder for InfluxRecorder {
     }
 
     fn register_counter(&self, key: &Key) -> Counter {
-        self.registry
+        self.inner
+            .registry
             .get_or_create_counter(key, |counter| counter.to_owned().into())
     }
 
     fn register_gauge(&self, key: &Key) -> Gauge {
-        self.registry
+        self.inner
+            .registry
             .get_or_create_gauge(key, |gauge| gauge.to_owned().into())
     }
 
     fn register_histogram(&self, key: &Key) -> Histogram {
-        self.registry
+        self.inner
+            .registry
             .get_or_create_histogram(key, |histogram| histogram.to_owned().into())
     }
 }
