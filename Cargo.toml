@@ -1,0 +1,13 @@
+[package]
+name = "metrics-influxdb"
+version = "0.1.0"
+edition = "2021"
+homepage = "https://github.com/alanbaumgartner/metrics-influxdb"
+repository = "https://github.com/sevco/metrics-influxdb"
+description = "InfluxDB client compatible with the metrics facade"
+license = "MIT"
+
+[dependencies]
+log = "0.4.20"
+metrics = "0.21.1"
+reqwest = "0.11.22"
