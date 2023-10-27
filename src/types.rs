@@ -99,3 +99,9 @@ impl From<i64> for Type {
         Type::SignedInteger(value)
     }
 }
+
+impl From<usize> for Type {
+    fn from(value: usize) -> Self {
+        Type::UnsignedInteger(value as u64)
+    }
+}

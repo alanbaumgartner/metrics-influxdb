@@ -1,5 +1,7 @@
 # metrics-influxdb
 
-### Inspiration
+Work in progress [metrics](https://crates.io/crates/metrics) recorder and client for InfluxDB.
+
+### Inspirations, Credits, & Sources
 * https://crates.io/crates/influxdb
-* https://crates.io/crates/metrics-exporter-influx
+* https://github.com/metrics-rs/metrics/blob/main/metrics-exporter-prometheus

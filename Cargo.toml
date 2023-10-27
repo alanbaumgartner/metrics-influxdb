@@ -8,9 +8,18 @@ description = "InfluxDB client compatible with the metrics facade"
 license = "MIT"
 
 [dependencies]
+dashmap = "5.5.3"
+derivative = "2.2.0"
+derive_builder = "0.12.0"
 itertools = "0.11.0"
 log = "0.4.20"
 metrics = "0.21.1"
+metrics-util = "0.15.1"
 once_cell = "1.18.0"
+quanta = "0.12.0"
 regex = "1.10.2"
-reqwest = "0.11.22"
+reqwest = { version = "0.11.22", features = ["json"] }
+serde = { version = "1.0.190", features = ["derive"] }
+thiserror = "1.0.50"
+tokio = "1.33.0"
+tokio-retry = "0.3.0"
