@@ -49,7 +49,7 @@ pub enum InfluxConfig {
     V2(InfluxV2Config),
 }
 
-pub(crate) struct InfluxV1Config {
+pub struct InfluxV1Config {
     pub(crate) endpoint: String,
     pub(crate) db: String,
     pub(crate) username: Option<String>,
@@ -59,7 +59,7 @@ pub(crate) struct InfluxV1Config {
     pub(crate) consistency: Option<Consistency>,
 }
 
-pub(crate) struct InfluxV2Config {
+pub struct InfluxV2Config {
     pub(crate) endpoint: String,
     pub(crate) bucket: String,
     pub(crate) org: String,

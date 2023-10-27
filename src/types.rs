@@ -1,3 +1,5 @@
+use std::fmt::{Display, Formatter};
+
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum Type {
     Boolean(bool),
@@ -5,6 +7,19 @@ pub enum Type {
     SignedInteger(i64),
     UnsignedInteger(u64),
     Text(String),
+}
+
+impl Display for Type {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let str = match self {
+            Type::Boolean(value) => value.to_string(),
+            Type::Float(value) => value.to_string(),
+            Type::SignedInteger(value) => format!("{}i", value.to_string()),
+            Type::UnsignedInteger(value) => format!("{}i", value.to_string()),
+            Type::Text(value) => value.clone(),
+        };
+        write!(f, "{str}")
+    }
 }
 
 impl From<bool> for Type {
