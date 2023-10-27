@@ -152,7 +152,7 @@ fn parse_labels(labels: Iter<Label>) -> Vec<(String, Type)> {
 }
 
 mod test {
-    use crate::metric::{escape_string, Metric};
+    
 
     #[test]
     fn test_escape_string() {

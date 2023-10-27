@@ -4,7 +4,7 @@ use std::time::Duration;
 use itertools::Itertools;
 use metrics::{Counter, Gauge, Histogram, Key, KeyName, Recorder, SharedString, Unit};
 use metrics_util::parse_quantiles;
-use metrics_util::registry::{Registry, Storage};
+use metrics_util::registry::{Registry};
 use reqwest::{Client, RequestBuilder};
 use serde::{Deserialize, Serialize};
 use tokio::time::sleep;

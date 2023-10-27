@@ -117,15 +117,13 @@ impl InfluxConfig for InfluxV2Config {
         todo!()
     }
 
-    fn request(&self, client: &Client) -> RequestBuilder {
+    fn request(&self, _client: &Client) -> RequestBuilder {
         todo!()
     }
 }
 
 mod test {
-    use crate::config::{
-        Consistency, InfluxConfig, InfluxV1Config, InfluxV1ConfigBuilder, Precision,
-    };
+    
 
     #[test]
     fn test_v1_config() {

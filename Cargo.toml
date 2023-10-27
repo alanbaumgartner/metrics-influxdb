@@ -3,7 +3,7 @@ name = "metrics-influxdb"
 version = "0.1.0"
 edition = "2021"
 homepage = "https://github.com/alanbaumgartner/metrics-influxdb"
-repository = "https://github.com/sevco/metrics-influxdb"
+repository = "https://github.com/alanbaumgartner/metrics-influxdb"
 description = "InfluxDB client compatible with the metrics facade"
 license = "MIT"
 
