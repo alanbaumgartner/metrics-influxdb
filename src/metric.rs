@@ -45,12 +45,28 @@ impl Display for Metric {
             escape_string(self.measurement.clone()) + ","
         };
 
-        let tags = self.tags.iter()
-            .map(|(tag, value)| format!("{}={}", escape_string(tag), escape_string(value.to_string())))
+        let tags = self
+            .tags
+            .iter()
+            .map(|(tag, value)| {
+                format!(
+                    "{}={}",
+                    escape_string(tag),
+                    escape_string(value.to_string())
+                )
+            })
             .join(",");
 
-        let fields = self.fields.iter()
-            .map(|(field, value)| format!("{}={}", escape_string(field), escape_string(value.to_string())))
+        let fields = self
+            .fields
+            .iter()
+            .map(|(field, value)| {
+                format!(
+                    "{}={}",
+                    escape_string(field),
+                    escape_string(value.to_string())
+                )
+            })
             .join(",");
 
         let ilp = vec![tags, fields].join(" ");
@@ -68,13 +84,15 @@ fn escape_string(value: impl Into<String>) -> String {
     }
 }
 
-
 mod test {
     use crate::metric::{escape_string, Metric};
 
     #[test]
     fn test_escape_string() {
-        assert_eq!("\"tag\\=Hello\\, world!\"", escape_string("tag=Hello, world!"))
+        assert_eq!(
+            "\"tag\\=Hello\\, world!\"",
+            escape_string("tag=Hello, world!")
+        )
     }
 
     #[test]

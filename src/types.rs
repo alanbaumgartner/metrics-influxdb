@@ -76,7 +76,6 @@ impl From<u64> for Type {
     }
 }
 
-
 impl From<i8> for Type {
     fn from(value: i8) -> Self {
         Type::SignedInteger(value as i64)
